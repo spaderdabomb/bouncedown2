@@ -16,6 +16,7 @@ class SoundManager():
         # values.
         self.music_list = []
         self.current_song = 0
+        self.current_player = None
         self.music = None
         self.sound = None
 
@@ -37,17 +38,16 @@ class SoundManager():
         self.sound.play(self.sound_volume)
 
     def play_song(self):
-        # Stop what is currently playing.
-        if self.music:
-            self.music.stop()
+        # # Stop what is currently playing.
+        # if self.music:
+        #     self.music.stop(self.current_player)
 
         # Play the next song
         self.music = arcade.Sound(self.music_list[self.current_song], streaming=True)
-        self.music.play(self.music_volume)
+        self.current_player = self.music.play(self.music_volume)
         time.sleep(0.01)
 
     def update(self):
-
-        position = self.music.get_stream_position()
+        position = self.music.get_stream_position(self.current_player)
         if position == 0.0:
             self.play_song()

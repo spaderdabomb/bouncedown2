@@ -18,6 +18,11 @@ class SpriteCache:
     PLAY_BUTTON = None
     BACK_SETTINGS = None
 
+    # Textures
+    BOUNCE_PLATFORM_UP = None
+    ICE_PLATFORM = None
+    MAIN_CHARACTER = None
+
     # Loading feedbakc
     FILE_INDEX = 0
 
@@ -44,7 +49,9 @@ class SpriteCache:
 
     @staticmethod
     def _load_textures():
-        pass
+        SpriteCache.BOUNCE_PLATFORM_UP = arcade.load_texture(os.path.join(SPRITES_PATH, 'bounce_platform_up.png'), RESOLUTION_SCALING)
+        SpriteCache.ICE_PLATFORM = arcade.load_texture(os.path.join(SPRITES_PATH, 'ice_platform.png'), RESOLUTION_SCALING)
+        SpriteCache.MAIN_CHARACTER = arcade.load_texture(os.path.join(SPRITES_PATH, 'main_character_idle.png'), RESOLUTION_SCALING)
 
     @staticmethod
     def _load_ui():
@@ -109,10 +116,10 @@ class SpriteCache:
         )
 
         x = SCREEN_WIDTH/2
-        y = (1080 - 400)*RESOLUTION_SCALING
+        y = (1080 - 820)*RESOLUTION_SCALING
         SpriteCache.BACK_SETTINGS = arcade.gui.UIImageButton(
             center_x=x,
-            center_y=y - 3*spacing,
+            center_y=y,
             normal_texture=arcade.load_texture(os.path.join(SPRITES_PATH, 'button_back_normal.png')),
             hover_texture=arcade.load_texture(os.path.join(SPRITES_PATH, 'button_back_hover.png')),
             press_texture=arcade.load_texture(os.path.join(SPRITES_PATH, 'button_back_clicked.png')),

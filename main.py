@@ -10,8 +10,6 @@ from sound_manager import SoundManager
 def main():
     GameData(SCREEN_TITLE)
     SpriteCache()
-    GameData.data['player_level'] = 1
-    GameData.data['player_xp'] = 0
     window = arcade.Window(int(SCREEN_WIDTH), int(SCREEN_HEIGHT), SCREEN_TITLE)
     sound_manager = SoundManager(window)
     loading_view = menu_views.LoadingMenuView(window, sound_manager)

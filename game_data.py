@@ -4,7 +4,7 @@ import numpy as np
 
 from Utils import py_gjapi
 
-NUM_ACHIEVEMENTS = 8
+NUM_ACHIEVEMENTS = 24
 NUM_SCORES_DISPLAYED = 10
 NUM_SCORES_LOGGED = 100
 
@@ -21,9 +21,6 @@ class GameData():
         'alltime_scores': [],
         'achievements_complete': [False for j in range(NUM_ACHIEVEMENTS)],
         'username': None,
-        'player_level': 1,
-        'player_xp': 0,
-        'tutorials_passed': [True for i in range(10)]
     }
     data = initial_data
 
@@ -57,7 +54,11 @@ class GameData():
         try:
             with open(GameData.DATA_FILE_PATH, 'rb') as f:
                 data = pickle.load(f)
+                print(len(GameData.data.keys()))
+                print(len(data.keys()))
+
                 if len(GameData.data.keys()) == len(data.keys()):
+                    print('here')
                     pass
                 else:
                     # Update dictionary before loading
@@ -87,6 +88,7 @@ class GameData():
             with open(GameData.DATA_FILE_PATH, 'rb') as f:
                 data = pickle.load(f)
                 GameData.data = data
+                print(GameData.data)
         except:
             pass
 
@@ -113,7 +115,7 @@ class GameData():
         my_scores_dict = GameData.data['my_scores']
         num_entries = len(my_scores_dict)
 
-        my_scores_arr = np.zeros(num_entries, dtype=np.int)
+        my_scores_arr = np.zeros(num_entries, dtype=np.int64)
         my_scores_usernames_arr = ['' for i in range(num_entries)]
         for i in range(num_entries):
             my_scores_arr[i] = my_scores_dict[i]['score']
@@ -146,16 +148,14 @@ class GameData():
             GameData.data['my_scores'] = my_scores_dict
 
         # Online highscores
-        gamejolt = py_gjapi.GameJoltTrophy(GameData.data['username'], 'token', '484162', '113bbb2d41c5bb3331393e2cdddc7338')
-        gamejolt.addScores(str(score), score, table_id=491301, guest=True, guestname=GameData.data["username"])
-        gamejolt.addScores(str(score), score, table_id=491315, guest=True, guestname=GameData.data["username"])
-
-
+        gamejolt = py_gjapi.GameJoltTrophy(GameData.data['username'], 'token', '633226', '93e6356d3b7a552047844a2e250b7fb1')
+        gamejolt.addScores(str(score), score, table_id=641423, guest=True, guestname=GameData.data["username"])
+        gamejolt.addScores(str(score), score, table_id=641427, guest=True, guestname=GameData.data["username"])
 
     # Debugging
     @staticmethod
     def add_fake_highscores():
-        highscore_dict = {"my_scores": [{'username': 'player'+str(i), 'score': np.random.randint(0, 10000)} for i in range(6)]}
+        highscore_dict = {"my_scores": [{'username': 'player'+str(i), 'score': np.random.randint(0, 10000)} for i in range(10)]}
         GameData.data["my_scores"] = highscore_dict["my_scores"]
         GameData.save_data()
 
