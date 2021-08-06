@@ -28,6 +28,7 @@ class Platform(arcade.Sprite):
         self.do_ice_animation_bool = False
         self.do_bounce_animation_bool = False
         self.current_animation_frames = 0
+        self.ready_to_play_sound = True
 
         self.setup_bool = False
 
@@ -47,12 +48,23 @@ class Platform(arcade.Sprite):
         self.right_platform_1 = arcade.load_texture(os.path.join(SPRITES_PATH, 'right_platform_1.png'))
         self.left_platform_1 = arcade.load_texture(os.path.join(SPRITES_PATH, 'left_platform_1.png'))
 
+        self.hedgehog = arcade.Sprite(os.path.join(SPRITES_PATH, 'hedgehog.png'), PLATFORM_SCALE)
+
     def remove_after_2_seconds(self):
         self.remove_in_2_seconds = True
+
+    def on_draw(self):
+        if self.platform_type == 6:
+            self.hedgehog.draw()
 
     def update(self):
         if not self.setup_bool:
             self.setup_bool = True
+
+        if self.platform_type == 6:
+            self.hedgehog.center_x = self.center_x
+            self.hedgehog.center_y = self.center_y + self.height - 5*RESOLUTION_SCALING
+            self.hedgehog.update()
 
         if self.remove_in_2_seconds:
             self.remove_counter += 1
@@ -106,11 +118,7 @@ class Platform(arcade.Sprite):
             self.current_animation_frames += 1
 
 
-
-
-
-
-def generate_platform_type(game_view):
+def generate_platform_type(game_view: GameSceneView):
     normal_platform_chance = 790
     ice_platform_chance = 30
     bounce_platform_chance = 30
@@ -181,5 +189,44 @@ def generate_platform_type(game_view):
         platform_texture_name = 'right_platform.png'
     else:
         temp_platform = arcade.Sprite(os.path.join(SPRITES_PATH, 'normal_platform.png'), 1.5*RESOLUTION_SCALING)
+        platform_type = 1
+        platform_texture_name = 'normal_platform.png'
+
+    return platform_type, platform_texture_name
+
+
+def generate_platform_type_2():
+    random_num = np.random.randint(0, 9)
+    platform_type = 1
+    platform_texture_name = 'normal_platform.png'
+
+    if random_num == 1:
+        platform_type = 1
+        platform_texture_name = 'normal_platform.png'
+    elif random_num == 2:
+        platform_type = 2
+        platform_texture_name = 'ice_platform.png'
+    elif random_num == 3:
+        platform_type = 3
+        platform_texture_name = 'bounce_platform.png'
+    elif random_num == 4:
+        platform_type = 4
+        platform_texture_name = 'small_platform.png'
+    elif random_num == 5:
+        platform_type = 5
+        platform_texture_name = 'big_platform.png'
+    elif random_num == 6:
+        platform_type = 6
+        platform_texture_name = 'spike_platform.png'
+    elif random_num == 7:
+        platform_type = 7
+        platform_texture_name = 'left_platform.png'
+    elif random_num == 8:
+        platform_type = 8
+        platform_texture_name = 'right_platform.png'
+    else:
+        temp_platform = arcade.Sprite(os.path.join(SPRITES_PATH, 'normal_platform.png'), 1.5 * RESOLUTION_SCALING)
+        platform_type = 1
+        platform_texture_name = 'normal_platform.png'
 
     return platform_type, platform_texture_name

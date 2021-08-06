@@ -20,7 +20,11 @@ class GameData():
         'my_scores': [],
         'alltime_scores': [],
         'achievements_complete': [False for j in range(NUM_ACHIEVEMENTS)],
+        'achievements_scores': [100, 101, 102, 100000, 1000000, 5000000, 10, 20, 30, 5, 10, 20, 1000, 2000, 3000,
+                                1000, 2000, 3000, 1000, 2000, 3000, 500, 1000, 2000],
+        'achievements_progress': [0 for i in range(NUM_ACHIEVEMENTS)],
         'username': None,
+        'fakekey': None
     }
     data = initial_data
 
@@ -54,11 +58,7 @@ class GameData():
         try:
             with open(GameData.DATA_FILE_PATH, 'rb') as f:
                 data = pickle.load(f)
-                print(len(GameData.data.keys()))
-                print(len(data.keys()))
-
                 if len(GameData.data.keys()) == len(data.keys()):
-                    print('here')
                     pass
                 else:
                     # Update dictionary before loading
@@ -100,6 +100,16 @@ class GameData():
         Resets data back to initial values
         '''
         GameData.data = GameData.initial_data
+        GameData.save_data()
+
+    @staticmethod
+    def clear_all_data_except_username():
+        '''
+        Resets data back to initial values
+        '''
+        username = GameData.data['username']
+        GameData.data = GameData.initial_data
+        GameData.data['username'] = username
         GameData.save_data()
 
     @staticmethod
@@ -164,6 +174,18 @@ class GameData():
         achievements_dict = GameData.data["achievements_complete"]
         for i in range(NUM_ACHIEVEMENTS):
             achievements_dict[i] = True
+
+        GameData.data['achievements_complete'] = achievements_dict
+        GameData.save_data()
+
+    @staticmethod
+    def reset_all_achievements():
+        achievements_dict = GameData.data["achievements_complete"]
+        achievements_progress_dict = GameData.data["achievements_progress"]
+        for i in range(NUM_ACHIEVEMENTS):
+            achievements_dict[i] = False
+            achievements_progress_dict[i] = False
+
 
         GameData.data['achievements_complete'] = achievements_dict
         GameData.save_data()

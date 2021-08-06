@@ -20,34 +20,46 @@ class SoundManager():
         self.music = None
         self.sound = None
 
-        self.music_volume = 0.0
-        self.sound_volume = 0.50
+        self.music_volume = 0.5
+        self.sound_volume = 0.5
 
         self.setup()
 
     def setup(self):
         # List of music
-        self.music_list = [os.path.join(AUDIO_PATH, "main_menu_music.wav")]
-        self.sound_list = [os.path.join(AUDIO_PATH, "menu_selection_click.wav")]
+        self.music_list = [os.path.join(AUDIO_PATH, "main_menu_music.wav"),
+                           os.path.join(AUDIO_PATH, "in_game_music.wav")]
+
+        self.sound_list = [os.path.join(AUDIO_PATH, "menu_selection_click.wav"),
+                           os.path.join(AUDIO_PATH, "big_platform_sound.wav"),
+                           os.path.join(AUDIO_PATH, "bounce_platform_sound.wav"),
+                           os.path.join(AUDIO_PATH, "bounce_while_big_sound.wav"),
+                           os.path.join(AUDIO_PATH, "bounce_while_small_sound.wav"),
+                           os.path.join(AUDIO_PATH, "cloud_platform_sound.wav"),
+                           os.path.join(AUDIO_PATH, "lava_death_sound.wav"),
+                           os.path.join(AUDIO_PATH, "normal_platform_sound.wav"),
+                           os.path.join(AUDIO_PATH, "player_death_sound.wav"),
+                           os.path.join(AUDIO_PATH, "small_platform_sound.wav"),
+                           os.path.join(AUDIO_PATH, "big_platform_sound.wav"),
+                           os.path.join(AUDIO_PATH, "spiky_platform_sound.wav")]
 
         self.current_song = 0
-        self.play_song()
 
     def play_sound(self, index):
         self.sound = arcade.Sound(self.sound_list[index], streaming=True)
         self.sound.play(self.sound_volume)
 
-    def play_song(self):
-        # # Stop what is currently playing.
-        # if self.music:
-        #     self.music.stop(self.current_player)
+    def play_song(self, index):
+        # Stop what is currently playing.
+        if self.music:
+            self.music.stop(self.current_player)
 
-        # Play the next song
-        self.music = arcade.Sound(self.music_list[self.current_song], streaming=True)
+        # Play selected song
+        self.music = arcade.Sound(self.music_list[index], streaming=True)
         self.current_player = self.music.play(self.music_volume)
         time.sleep(0.01)
 
     def update(self):
         position = self.music.get_stream_position(self.current_player)
         if position == 0.0:
-            self.play_song()
+            self.play_song(0)

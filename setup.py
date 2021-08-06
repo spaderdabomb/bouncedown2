@@ -2,11 +2,11 @@ import sys
 from cx_Freeze import setup, Executable
 
 # Dependencies are automatically detected, but it might need fine tuning.
-build_exe_options = {"include_files": [r"enemies.py", r"game_data.py", r"globals.py", r"load_sprites.py",
-                                       r"main.py", r"misc_classes.py", r"player.py", "sound_manager.py",
-                                       r"C:\Users\jpdodson\Box\Programming\Python\PycharmProjects\lone_warrior_1\Assets",
-                                       r"C:\Users\jpdodson\Box\Programming\Python\PycharmProjects\lone_warrior_1\Utils",
-                                       r"C:\Users\jpdodson\Box\Programming\Python\PycharmProjects\lone_warrior_1\Views"],
+build_exe_options = {"include_files": [r"game_data.py", r"globals.py", r"load_sprites.py",
+                                       r"main.py", r"platforms.py", r"player.py", "sound_manager.py", r"py_gjapi.py",
+                                       r"C:\Repositories\PythonGameMaking\bouncedown_2\Assets",
+                                       r"C:\Repositories\PythonGameMaking\bouncedown_2\Utils",
+                                       r"C:\Repositories\PythonGameMaking\bouncedown_2\Views"],
                      "packages": ["os", "pyglet", "yaml", "arcade"], "excludes": ["tkinter", "PySide2", "PyQt5"]}
 
 # GUI applications require a different base on Windows (the default is for a

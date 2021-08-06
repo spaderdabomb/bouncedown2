@@ -8,12 +8,15 @@ import time
 import numpy as np
 import timeit
 
+from arcade.gui.ui_style import UIStyle
+
 from globals import *
 from player import Player
 from platforms import Platform, generate_platform_type
 from load_sprites import SpriteCache
 from game_data import GameData
 from Views import menu_views
+from Utils.gui import TextLabel
 
 from typing import TYPE_CHECKING
 
@@ -42,13 +45,22 @@ class GameSceneView(arcade.View):
         self.leftright_platform_acceleration = 0.55
         self.player_is_small = False
         self.player_is_big = False
+        self.player_has_horns = False
         self.small_big_countdown_start = 420
+        self.spike_countdown_start = 420
         self.player_is_small_countdown = self.small_big_countdown_start
         self.player_is_big_countdown = self.small_big_countdown_start
+        self.player_has_spikes_countdown = self.spike_countdown_start
         self.time_to_get_small_big = 60
         self.time_to_get_back_to_normal = 180
         self.player_is_bouncing = False
         self.fire_death_current_idx = 0
+
+        self.cloud_platforms_broken = 0
+        self.bouncy_platforms_touched = 0
+        self.score_while_small = 0
+        self.score_while_big = 0
+        self.score_while_spiky = 0
 
         self.keyup_pressed = False
         self.keydown_pressed = False
@@ -68,9 +80,6 @@ class GameSceneView(arcade.View):
         self._setup()
 
     def _setup(self):
-        # Purge UI
-        self.ui_manager.purge_ui_elements()
-
         # Player
         self.player_hitbox_vertical_scaling = 1.11
         self.player_scale = PLAYER_SCALE
@@ -92,6 +101,10 @@ class GameSceneView(arcade.View):
         self.player_old_scale = self.player.scale
         self.player_ghost_hit_box_initial = np.array(self.player_ghost.hit_box)
 
+        self.player_horns = arcade.Sprite(os.path.join(SPRITES_PATH, 'main_character_horns.png'), self.player_scale)
+        self.player_horns.center_x = self.player.center_x
+        self.player_horns.center_y = SCREEN_HEIGHT + 100*RESOLUTION_SCALING
+
         self.player_spike_death_sprite = arcade.Sprite(os.path.join(SPRITES_PATH, 'main_character_spike_death.png'), 2*self.player_scale)
 
         self.fire_death_animation = arcade.Sprite(os.path.join(SPRITES_PATH, 'fire_animation_0.png'), self.player_scale)
@@ -101,12 +114,12 @@ class GameSceneView(arcade.View):
             self.fire_death_animation.append_texture(arcade.load_texture(os.path.join(SPRITES_PATH, 'fire_animation_'+str(i+1)+'.png')))
 
         # Platforms
-        self.platform1 = Platform(os.path.join(SPRITES_PATH, 'normal_platform.png'), 0.5 * RESOLUTION_SCALING, self, 1)
+        self.platform1 = Platform(os.path.join(SPRITES_PATH, 'normal_platform.png'), PLATFORM_SCALE * RESOLUTION_SCALING, self, 1)
         self.platform1.center_x = SCREEN_WIDTH / 2
         self.platform1.center_y = ((4 / 6) * SCREEN_HEIGHT)
         self.platform1.change_y = self.starting_platform_speed
 
-        self.platform2 = Platform(os.path.join(SPRITES_PATH, 'normal_platform.png'), 0.5 * RESOLUTION_SCALING, self, 1)
+        self.platform2 = Platform(os.path.join(SPRITES_PATH, 'normal_platform.png'), PLATFORM_SCALE * RESOLUTION_SCALING, self, 1)
         self.platform2.center_x = SCREEN_WIDTH / 3
         self.platform2.center_y = ((3 / 6) * SCREEN_HEIGHT)
         self.platform2.change_y = self.starting_platform_speed
@@ -164,6 +177,9 @@ class GameSceneView(arcade.View):
         self.game_scene_initialized = True
         self.frames_since_game_over = 0
 
+        # Music
+        self.sound_manager.play_song(1)
+
     def on_ui_event(self, event: arcade.gui.UIEvent):
         if event.type == arcade.gui.UIClickable.CLICKED and event.get('ui_element').id == 'settings_button':
             pass
@@ -177,8 +193,9 @@ class GameSceneView(arcade.View):
         self.level_background.draw()
         self.spikes.draw()
         self.platform_spritelist.draw()
-        # for platform in self.platform_spritelist:
-        #     platform.draw_hit_box(arcade.color.RED)
+        for platform in self.platform_spritelist:
+            platform.on_draw()
+            # platform.draw_hit_box(arcade.color.RED)
 
         # Animations
         if self.start_spike_animation:
@@ -186,6 +203,8 @@ class GameSceneView(arcade.View):
         self.fire.draw()
 
         # Draw main sprites
+        if self.player_has_horns:
+            self.player_horns.draw()
         self.player.draw()
         self.player.on_draw()
         self.player_ghost.draw()
@@ -260,8 +279,13 @@ class GameSceneView(arcade.View):
         self.platform_spritelist.update()
         self.bottom_bar.update()
         self.player.update()
+        if self.player_has_horns:
+            self.player_horns.update()
+            self.player_horns.center_x = self.player.center_x
+            self.player_horns.center_y = self.player.center_y + 0.8*self.player.height/2
         self.player_ghost.center_x = self.player.center_x
         self.player_ghost.center_y = self.player.center_y
+        self.player_horns.scale = self.player.scale
         self.player_ghost.scale = self.player.scale
         if self.start_spike_animation:
             self.player_spike_death_sprite.update()
@@ -288,69 +312,123 @@ class GameSceneView(arcade.View):
             self.frames_since_platform_created = 0
 
         # Handle platform collisions
-        collision_list = arcade.check_for_collision_with_list(self.player, self.platform_spritelist)
-        if len(collision_list) >= 1:
-            temp_platform = collision_list[0]
-            if self.player.change_y <= temp_platform.change_y and not temp_platform.do_ice_animation_bool:
-                self.player_is_bouncing = False
-                self.player.change_y = temp_platform.change_y
-                self.player.center_y = temp_platform.center_y + self.player.height*self.player_hitbox_vertical_scaling / 2 + 5
+        if not self.game_ended:
+            collision_list = arcade.check_for_collision_with_list(self.player, self.platform_spritelist)
+            if len(collision_list) >= 1:
+                temp_platform = collision_list[0]
+                if self.player.change_y <= temp_platform.change_y and not temp_platform.do_ice_animation_bool:
+                    self.player_is_bouncing = False
+                    self.player.change_y = temp_platform.change_y
+                    self.player.center_y = temp_platform.center_y + self.player.height*self.player_hitbox_vertical_scaling / 2 + 5
 
-                # Platform logic
-                if temp_platform.platform_type == 2 and not self.player_is_small:  # Ice platforms
-                    temp_platform.remove_after_2_seconds()
-                elif temp_platform.platform_type == 3:  # Bounce platforms
-                    self.player.change_y += self.player.jump_velocity + 0.3 * temp_platform.change_y / self.starting_platform_speed
-                    self.player_is_bouncing = True
-                    temp_platform.do_bounce_animation()
-                elif temp_platform.platform_type == 4:  # Small platforms
-                    self.player.scale -= (self.small_big_scale_constant - 1)*self.player_scale_initial / self.time_to_get_small_big
-                    self.player.acceleration += (self.small_big_scale_constant-1)*self.player.acceleration_initial / self.time_to_get_small_big
-                    self.player.max_speed_x += (self.small_big_scale_constant-1)*self.player.max_speed_x_initial / self.time_to_get_small_big
-                    self.player.jump_velocity += (self.small_big_scale_constant+0.2-1)*self.player.jump_velocity_initial / self.time_to_get_small_big
-                    if self.player.scale <= self.player_scale / self.small_big_scale_constant:
-                        self.player.scale = self.player_scale / self.small_big_scale_constant
-                    if self.player.acceleration >= self.player.acceleration_initial * self.small_big_scale_constant:
-                        self.player.acceleration = self.player.acceleration_initial * self.small_big_scale_constant
-                    if self.player.max_speed_x >= self.player.max_speed_x_initial * self.small_big_scale_constant:
-                        self.player.max_speed_x = self.player.max_speed_x_initial * self.small_big_scale_constant
-                    if self.player.jump_velocity >= self.player.jump_velocity_initial * (self.small_big_scale_constant + 0.2):
-                        self.player.jump_velocity = self.player.jump_velocity_initial * (self.small_big_scale_constant + 0.2)
+                    # Platform logic
+                    if temp_platform.platform_type == 2 and not self.player_is_small:  # Cloud platforms
+                        if not temp_platform.remove_in_2_seconds:
+                            self.cloud_platforms_broken += 1
+                            if self.cloud_platforms_broken > GameData.data['achievements_progress'][6]:
+                                GameData.data['achievements_progress'][6] += 1
+                                GameData.data['achievements_progress'][7] += 1
+                                GameData.data['achievements_progress'][8] += 1
+                            temp_platform.remove_after_2_seconds()
 
-                    if self.player.scale < self.player_scale_initial:
-                        self.player_is_small = True
-                        self.player_is_big = False
-                    elif self.player.scale > self.player_scale_initial:
-                        self.player_is_small = False
-                        self.player_is_big = True
-                    self.player_is_small_countdown = self.small_big_countdown_start
-                elif temp_platform.platform_type == 5:  # Big platforms
-                    self.player.scale += (self.small_big_scale_constant - 1)*self.player_scale_initial / self.time_to_get_small_big
-                    self.player.acceleration -= (self.small_big_scale_constant-1)*self.player.acceleration_initial / self.time_to_get_small_big
-                    self.player.max_speed_x -= (self.small_big_scale_constant-1)*self.player.max_speed_x_initial / self.time_to_get_small_big
-                    self.player.jump_velocity -= (self.small_big_scale_constant+0.2-1)*self.player.jump_velocity_initial / self.time_to_get_small_big
-                    if self.player.scale >= self.player_scale * self.small_big_scale_constant:
-                        self.player.scale = self.player_scale * self.small_big_scale_constant
-                    if self.player.acceleration <= self.player.acceleration_initial / self.small_big_scale_constant:
-                        self.player.acceleration = self.player.acceleration_initial / self.small_big_scale_constant
-                    if self.player.max_speed_x <= self.player.max_speed_x_initial / self.small_big_scale_constant:
-                        self.player.max_speed_x = self.player.max_speed_x_initial / self.small_big_scale_constant
-                    if self.player.jump_velocity <= self.player.jump_velocity_initial / (self.small_big_scale_constant + 0.2):
-                        self.player.jump_velocity = self.player.jump_velocity_initial / (self.small_big_scale_constant + 0.2)
+                        # Sounds
+                        if temp_platform.ready_to_play_sound:
+                            self.sound_manager.play_sound(5)
+                    elif temp_platform.platform_type == 3:  # Bounce platforms
+                        self.player.change_y += self.player.jump_velocity + 0.3 * temp_platform.change_y / self.starting_platform_speed
+                        self.player_is_bouncing = True
+                        temp_platform.do_bounce_animation()
+                        self.bouncy_platforms_touched += 1
+                        if self.bouncy_platforms_touched > GameData.data['achievements_progress'][9]:
+                            GameData.data['achievements_progress'][9] += 1
+                            GameData.data['achievements_progress'][10] += 1
+                            GameData.data['achievements_progress'][11] += 1
 
-                    if self.player.scale < self.player_scale_initial:
-                        self.player_is_small = True
-                        self.player_is_big = False
-                    elif self.player.scale > self.player_scale_initial:
-                        self.player_is_small = False
-                        self.player_is_big = True
-                    self.player_is_small_countdown = self.small_big_countdown_start
-                elif temp_platform.platform_type == 7:  # Left platforms
-                    self.player.change_x -= self.leftright_platform_acceleration
-                elif temp_platform.platform_type == 8:  # Right platforms
-                    self.player.change_x += self.leftright_platform_acceleration
+                        # Sounds
+                        if temp_platform.ready_to_play_sound:
+                            if self.player_is_small:
+                                self.sound_manager.play_sound(4)
+                            elif self.player_is_big:
+                                self.sound_manager.play_sound(3)
+                            else:
+                                self.sound_manager.play_sound(2)
+                    elif temp_platform.platform_type == 4:  # Small platforms
+                        self.player.scale -= (self.small_big_scale_constant - 1)*self.player_scale_initial / self.time_to_get_small_big
+                        self.player.acceleration += (self.small_big_scale_constant-1)*self.player.acceleration_initial / self.time_to_get_small_big
+                        self.player.max_speed_x += (self.small_big_scale_constant-1)*self.player.max_speed_x_initial / self.time_to_get_small_big
+                        self.player.jump_velocity += (self.small_big_scale_constant+0.2-1)*self.player.jump_velocity_initial / self.time_to_get_small_big
+                        if self.player.scale <= self.player_scale / self.small_big_scale_constant:
+                            self.player.scale = self.player_scale / self.small_big_scale_constant
+                        if self.player.acceleration >= self.player.acceleration_initial * self.small_big_scale_constant:
+                            self.player.acceleration = self.player.acceleration_initial * self.small_big_scale_constant
+                        if self.player.max_speed_x >= self.player.max_speed_x_initial * self.small_big_scale_constant:
+                            self.player.max_speed_x = self.player.max_speed_x_initial * self.small_big_scale_constant
+                        if self.player.jump_velocity >= self.player.jump_velocity_initial * (self.small_big_scale_constant + 0.2):
+                            self.player.jump_velocity = self.player.jump_velocity_initial * (self.small_big_scale_constant + 0.2)
 
+                        if self.player.scale < self.player_scale_initial:
+                            self.player_is_small = True
+                            self.player_is_big = False
+                        elif self.player.scale > self.player_scale_initial:
+                            self.player_is_small = False
+                            self.player_is_big = True
+                        self.player_is_small_countdown = self.small_big_countdown_start
+
+                        # Sounds
+                        if temp_platform.ready_to_play_sound:
+                            self.sound_manager.play_sound(9)
+                    elif temp_platform.platform_type == 5:  # Big platforms
+                        self.player.scale += (self.small_big_scale_constant - 1)*self.player_scale_initial / self.time_to_get_small_big
+                        self.player.acceleration -= (self.small_big_scale_constant-1)*self.player.acceleration_initial / self.time_to_get_small_big
+                        self.player.max_speed_x -= (self.small_big_scale_constant-1)*self.player.max_speed_x_initial / self.time_to_get_small_big
+                        self.player.jump_velocity -= (self.small_big_scale_constant+0.2-1)*self.player.jump_velocity_initial / self.time_to_get_small_big
+                        if self.player.scale >= self.player_scale * self.small_big_scale_constant:
+                            self.player.scale = self.player_scale * self.small_big_scale_constant
+                        if self.player.acceleration <= self.player.acceleration_initial / self.small_big_scale_constant:
+                            self.player.acceleration = self.player.acceleration_initial / self.small_big_scale_constant
+                        if self.player.max_speed_x <= self.player.max_speed_x_initial / self.small_big_scale_constant:
+                            self.player.max_speed_x = self.player.max_speed_x_initial / self.small_big_scale_constant
+                        if self.player.jump_velocity <= self.player.jump_velocity_initial / (self.small_big_scale_constant + 0.2):
+                            self.player.jump_velocity = self.player.jump_velocity_initial / (self.small_big_scale_constant + 0.2)
+
+                        if self.player.scale < self.player_scale_initial:
+                            self.player_is_small = True
+                            self.player_is_big = False
+                        elif self.player.scale > self.player_scale_initial:
+                            self.player_is_small = False
+                            self.player_is_big = True
+                        self.player_is_small_countdown = self.small_big_countdown_start
+
+                        # Sounds
+                        if temp_platform.ready_to_play_sound:
+                            self.sound_manager.play_sound(10)
+                    elif temp_platform.platform_type == 6:  # Spiky platform
+                        self.player_has_horns = True
+                        self.player_has_spikes_countdown = self.spike_countdown_start
+
+                        # Sounds
+                        if temp_platform.ready_to_play_sound:
+                            self.sound_manager.play_sound(11)
+                    elif temp_platform.platform_type == 7:  # Left platforms
+                        self.player.change_x -= self.leftright_platform_acceleration
+                    elif temp_platform.platform_type == 8:  # Right platforms
+                        self.player.change_x += self.leftright_platform_acceleration
+
+                # Sounds
+                if temp_platform.ready_to_play_sound:
+                    self.sound_manager.play_sound(7)
+                    temp_platform.ready_to_play_sound = False
+            else:
+                for platform in self.platform_spritelist:
+                    platform.ready_to_play_sound = True
+
+        # Routines for small, big and spiky splat
         if self.player_is_small:
+            self.score_while_small += 1
+            if self.score_while_small > GameData.data['achievements_progress'][12]:
+                GameData.data['achievements_progress'][12] += 1
+                GameData.data['achievements_progress'][13] += 1
+                GameData.data['achievements_progress'][14] += 1
             self.player_is_small_countdown -= 1
             if self.player_is_small_countdown <= 0:
                 self.player.scale += (self.small_big_scale_constant - 1) * self.player_scale_initial / self.time_to_get_back_to_normal
@@ -374,6 +452,11 @@ class GameSceneView(arcade.View):
                     self.player_is_small = False
                     self.player_is_small_countdown = self.small_big_countdown_start
         elif self.player_is_big:
+            self.score_while_big += 1
+            if self.score_while_big > GameData.data['achievements_progress'][15]:
+                GameData.data['achievements_progress'][15] += 1
+                GameData.data['achievements_progress'][16] += 1
+                GameData.data['achievements_progress'][17] += 1
             self.player_is_big_countdown -= 1
             if self.player_is_big_countdown <= 0:
                 self.player.scale -= (self.small_big_scale_constant - 1) * self.player_scale_initial / self.time_to_get_back_to_normal
@@ -396,6 +479,16 @@ class GameSceneView(arcade.View):
                     self.player.jump_velocity = self.player.jump_velocity_initial
                     self.player_is_big = False
                     self.player_is_big_countdown = self.small_big_countdown_start
+        if self.player_has_horns:
+            self.score_while_spiky += 1
+            if self.score_while_spiky > GameData.data['achievements_progress'][18]:
+                GameData.data['achievements_progress'][18] += 1
+                GameData.data['achievements_progress'][19] += 1
+                GameData.data['achievements_progress'][20] += 1
+            self.player_has_spikes_countdown -= 1
+            if self.player_has_spikes_countdown <= 0:
+                self.player_has_horns = False
+                self.player_has_spikes_countdown = self.spike_countdown_start
 
         # Speed changes
         if self.score % 100 == 0:
@@ -432,6 +525,7 @@ class GameSceneView(arcade.View):
 
         # Lose condition
         if self.player.center_y > SCREEN_WIDTH * RESOLUTION_SCALING or self.player.center_y < 130*RESOLUTION_SCALING and not self.game_ended:
+            self.sound_manager.play_sound(6)
             self.fire_death_animation.center_x = self.player.center_x
             self.fire_death_animation.center_y = 130*RESOLUTION_SCALING
             self.do_fire_death_animation = True
@@ -439,33 +533,90 @@ class GameSceneView(arcade.View):
             self.game_ended = True
         collision_bool = arcade.check_for_collision(self.player_ghost, self.spikes)
         if collision_bool and not self.game_ended:
-            self.player_spike_death_sprite.center_x = SCREEN_WIDTH / 2
-            self.player_spike_death_sprite.center_y = SCREEN_HEIGHT / 2
+            self.sound_manager.play_sound(8)
+            self.player_spike_death_sprite.center_x = self.player.center_x
+            self.player_spike_death_sprite.center_y = self.player.center_y
             self.start_spike_animation = True
             self.lose_stage()
             self.game_ended = True
+        for platform in self.platform_spritelist:
+            if platform.platform_type == 6:
+                collision_bool = arcade.check_for_collision(self.player_ghost, platform.hedgehog)
+                if collision_bool and not self.game_ended:
+                    self.sound_manager.play_sound(8)
+                    self.player_spike_death_sprite.center_x = self.player.center_x
+                    self.player_spike_death_sprite.center_y = self.player.center_y
+                    self.start_spike_animation = True
+                    self.lose_stage()
+                    self.game_ended = True
 
         # End of update calls
         self.update_animation()
         self.time_elapsed += 1.0 / FRAME_RATE
         self.frames_elapsed += 1
         self.frames_since_platform_created += 1
+
         if not self.game_ended:
+            # Achievements
             self.score += 1
+            if self.score > GameData.data['highscore']:
+                GameData.data['highscore'] = self.score
+                GameData.data['achievements_progress'][0] = self.score
+                GameData.data['achievements_progress'][1] = self.score
+                GameData.data['achievements_progress'][2] = self.score
+
+            # Marathon achievements
+            GameData.data['achievements_progress'][3] += 1
+            GameData.data['achievements_progress'][4] += 1
+            GameData.data['achievements_progress'][5] += 1
+
+            # Big small spikey achievements
+            small_big_spiky_score = np.min([self.score_while_small, self.score_while_big, self.score_while_spiky])
+            if small_big_spiky_score > GameData.data['achievements_progress'][21]:
+                GameData.data['achievements_progress'][21] = small_big_spiky_score
+                GameData.data['achievements_progress'][22] = small_big_spiky_score
+                GameData.data['achievements_progress'][23] = small_big_spiky_score
+
+            # Check if achievement complete
+            for i in range(NUM_ACHIEVEMENTS):
+                if (
+                        GameData.data['achievements_progress'][i] >= GameData.data['achievements_scores'][i] and not
+                        GameData.data['achievements_complete'][i]
+                ):
+                    GameData.data['achievements_complete'][i] = True
+
+                    # Achievement dropdown
+                    if i <= 9:
+                        index_str = '0' + str(i)
+                    else:
+                        index_str = str(i)
+                    path = os.path.join(SPRITES_PATH, 'achievement_dropdown.png')
+                    path_icon = os.path.join(SPRITES_PATH, 'achievement_' + index_str + '.png')
+                    achievement_dropdown = AchievementDropdown(path, RESOLUTION_SCALING)
+                    achievement_icon = arcade.Sprite(path_icon, RESOLUTION_SCALING)
+                    achievement_icon.center_x = (achievement_dropdown.center_x -
+                                                 achievement_dropdown.width / 2 +
+                                                 achievement_icon.width / 2 +
+                                                 5*RESOLUTION_SCALING)
+                    achievement_icon.center_y = achievement_dropdown.center_y
+                    self.window.achievement_dropdown_list.append(achievement_dropdown)
+                    self.window.achievement_dropdown_icon_list.append(achievement_icon)
+                    self.window.achievement_dropdown_text_list.append(SpriteCache.ACHIEVEMENT_DROPDOWN_LABELS_LIST[i])
+
+            GameData.save_data()
         else:
             self.frames_since_game_over += 1
             if self.frames_since_game_over > 120:
-                self.sound_manager.play_sound(0)
-                self.ui_manager.purge_ui_elements()
-
                 if GameData.data['username'] is None:
                     submit_highscore_view = menu_views.SubmitHighscoresView(self.window, self.sound_manager, self.score)
                     self.window.show_view(submit_highscore_view)
                 else:
                     GameData.add_highscore_entry(self.score)
                     GameData.save_data()
-                    start_menu_view = menu_views.HighscoresMenuView(self.window, self.sound_manager)
+                    start_menu_view = menu_views.AllViewsCombined(self.window, self.sound_manager)
                     self.window.show_view(start_menu_view)
+                    start_menu_view._setup_highscores_menu()
+
 
     def update_animation(self):
         if self.start_spike_animation:
@@ -534,6 +685,7 @@ class GameSceneView(arcade.View):
 
     def lose_stage(self):
         self.player_ghost.kill()
+        self.player_horns.kill()
         self.player.remove_self()
 
 
@@ -554,3 +706,40 @@ class FPSCounter:
             return 0
         else:
             return len(self.frame_times) / sum(self.frame_times)
+
+
+class AchievementDropdown(arcade.Sprite):
+
+    def __init__(self, file_name, scale, *args):
+        super().__init__(file_name, scale)
+
+        self.time = 0.0
+
+        self.center_x = SCREEN_WIDTH / 2
+        self.center_y = SCREEN_HEIGHT + self.height / 2
+        self.final_y = SCREEN_HEIGHT - self.height - SCREEN_BORDER_PADDING
+        self.delta_y = self.center_y - self.final_y
+        self.time_to_reach_bottom = 2.0
+        self.time_to_pause_end = 4.0
+        self.time_to_reach_top = 6.0
+
+        self.finished = False
+
+        if len(args) > 0:
+            self.center_y = args[0]
+            self.final_y = self.center_y - self.delta_y
+
+    def update(self):
+        # Move achievement down, pause, then up
+        if self.time < self.time_to_reach_bottom:
+            self.center_y -= (self.center_y - self.final_y) / (self.time_to_reach_bottom * 60)
+        elif self.time_to_reach_bottom < self.time < self.time_to_pause_end:
+            pass
+        elif self.time > self.time_to_pause_end:
+            self.center_y += (self.center_y - self.final_y) / (self.time_to_reach_bottom * 60)
+
+        if self.time > self.time_to_reach_top:
+            self.finished = True
+
+    def advance_time(self):
+        self.time += 1.0 / 60.0
