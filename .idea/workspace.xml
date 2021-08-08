@@ -2,39 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8f09796-80ed-46cb-99ef-6649173ff901" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/big_platform_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/bounce_platform_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/bounce_while_big_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/bounce_while_small_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/cloud_platform_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/in_game_music.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/lava_death_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/normal_platform_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/player_death_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/small_platform_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Audio/spiky_platform_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sprites/achievement_dropdown.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Audio/main_menu_music.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Audio/main_menu_music.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/menu_achievements.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sprites/menu_achievements.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/menu_highscores.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sprites/menu_highscores.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/menu_level_select.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/menu_main.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/menu_settings.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sprites/menu_settings.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/menu_start.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprites/menu_training_room.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utils/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/gui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/game_scene.py" beforeDir="false" afterPath="$PROJECT_DIR$/Views/game_scene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/menu_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Views/menu_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/globals.py" beforeDir="false" afterPath="$PROJECT_DIR$/globals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_sprites.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_sprites.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/platforms.py" beforeDir="false" afterPath="$PROJECT_DIR$/platforms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sound_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/sound_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,7 +141,7 @@
       <updated>1626471448257</updated>
       <workItem from="1626471449427" duration="44171000" />
       <workItem from="1626842982347" duration="132563000" />
-      <workItem from="1627700842145" duration="64177000" />
+      <workItem from="1627700842145" duration="65097000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1626733675528</created>
@@ -189,7 +157,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627362083111</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Nearing completion">
+      <created>1628234502559</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1628234502559</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -198,17 +173,18 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Big changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Big changes" />
+    <MESSAGE value="Nearing completion" />
+    <option name="LAST_COMMIT_MESSAGE" value="Nearing completion" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2930" y="446" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1626474967194">
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
     <state x="2930" y="446" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1626474967194" />
-    <state x="2825" y="261" key="CommitChangelistDialog2" timestamp="1627362080775">
+    <state x="2825" y="261" key="CommitChangelistDialog2" timestamp="1628234500963">
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
-    <state x="2825" y="261" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1627362080775" />
+    <state x="2825" y="261" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1628234500963" />
     <state x="2980" y="440" key="FileChooserDialogImpl" timestamp="1626713954568">
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
@@ -261,10 +237,10 @@
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1627279657213" />
-    <state x="2792" y="432" key="Vcs.Push.Dialog.v2" timestamp="1627362086878">
+    <state x="2792" y="432" key="Vcs.Push.Dialog.v2" timestamp="1628234512537">
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
-    <state x="2792" y="432" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1627362086878" />
+    <state x="2792" y="432" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1628234512537" />
     <state x="3009" y="613" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1626757055817">
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
