@@ -20,11 +20,13 @@ class GameData():
         'my_scores': [],
         'alltime_scores': [],
         'achievements_complete': [False for j in range(NUM_ACHIEVEMENTS)],
-        'achievements_scores': [100, 101, 102, 100000, 1000000, 5000000, 10, 20, 30, 5, 10, 20, 1000, 2000, 3000,
-                                1000, 2000, 3000, 1000, 2000, 3000, 500, 1000, 2000],
+        'achievements_scores': [2000, 4000, 6000, 100000, 1000000, 5000000, 10, 20, 30, 5, 10, 20, 1000, 2000, 3000,
+                                1000, 2000, 3000, 1000, 2000, 3500, 500, 1000, 2000],
         'achievements_progress': [0 for i in range(NUM_ACHIEVEMENTS)],
         'username': None,
-        'fakekey': None
+        'fakekey': None,
+        'music_on': True,
+        'sound_on': True
     }
     data = initial_data
 
@@ -159,8 +161,8 @@ class GameData():
 
         # Online highscores
         gamejolt = py_gjapi.GameJoltTrophy(GameData.data['username'], 'token', '633226', '93e6356d3b7a552047844a2e250b7fb1')
-        gamejolt.addScores(str(score), score, table_id=641423, guest=True, guestname=GameData.data["username"])
-        gamejolt.addScores(str(score), score, table_id=641427, guest=True, guestname=GameData.data["username"])
+        gamejolt.addScores(str(score), score, table_id=648014, guest=True, guestname=GameData.data["username"])
+        gamejolt.addScores(str(score), score, table_id=648016, guest=True, guestname=GameData.data["username"])
 
     # Debugging
     @staticmethod

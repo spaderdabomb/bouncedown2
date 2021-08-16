@@ -23,7 +23,7 @@ class Player(arcade.Sprite):
 
         self.setup_bool = True
         self.change_y = 0
-        self.jump_velocity_initial = 8*RESOLUTION_SCALING
+        self.jump_velocity_initial = 7*RESOLUTION_SCALING
         self.jump_velocity = self.jump_velocity_initial
         self.acceleration_initial = 0.85*RESOLUTION_SCALING
         self.acceleration = self.acceleration_initial

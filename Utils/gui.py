@@ -86,6 +86,7 @@ class TextButton:
         self.font_color = font_color
         self.width = int(self.theme.button_textures['normal'].width*self.scale)
         self.height = int(self.theme.button_textures['normal'].height*self.scale)
+        self.clicked = False
         if self.theme:
             self.normal_texture = self.theme.button_textures['normal']
             self.hover_texture = self.theme.button_textures['hover']
@@ -172,6 +173,8 @@ class TextButton:
         self.pressed = False
 
     def on_mouse_press(self, x, y):
+        x, y = get_scaled_mouse_coordinates(x, y)
+
         if x > self.center_x + self.width / 2:
             return
         if x < self.center_x - self.width / 2:
@@ -184,7 +187,8 @@ class TextButton:
         self.on_press()
 
     def on_mouse_release(self, x, y):
-        mouse_in_button = False
+        x, y = get_scaled_mouse_coordinates(x, y)
+
         if (
                 x > self.center_x + self.width / 2 or
                 x < self.center_x - self.width / 2 or
@@ -197,10 +201,14 @@ class TextButton:
 
         if self.pressed:
             self.on_release()
+            if mouse_in_button:
+                self.clicked = not self.clicked
 
         return self, mouse_in_button
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
+        x, y = get_scaled_mouse_coordinates(x, y)
+
         left_edge = self.center_x - self.width / 2
         right_edge = self.center_x + self.width / 2
         top_edge = self.center_y + self.height / 2
@@ -209,6 +217,24 @@ class TextButton:
             self.hovering = True
         else:
             self.hovering = False
+
+
+class CheckBox(TextButton):
+    def __init__(self,
+                 center_x: float,
+                 center_y: float,
+                 text: str,
+                 id: str,
+                 theme: Theme):
+
+        super().__init__(center_x, center_y, text, id, theme)
+
+    def draw_texture_theme(self):
+        if self.clicked:
+            arcade.draw_texture_rectangle(self.center_x, self.center_y, self.width, self.height, self.clicked_texture)
+        else:
+            arcade.draw_texture_rectangle(self.center_x, self.center_y, self.width, self.height, self.normal_texture)
+
 
 
 class SubmitButton(TextButton):
@@ -673,7 +699,9 @@ class TextLineEdit:
         self._key_pressed = key
         self._modifiers_pressed = modifiers
 
-    def on_mouse_press(self, x, y):
+    def on_mouse_press(self, x, y, button, modifiers):
+        x, y = get_scaled_mouse_coordinates(x, y)
+
         if (self.center_x + self.width / 2 > x > self.center_x - self.width / 2 and
                 self.center_y + self.height / 2 > y > self.center_y - self.height / 2):
             self._highlighted = True

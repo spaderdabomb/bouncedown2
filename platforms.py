@@ -69,7 +69,9 @@ class Platform(arcade.Sprite):
         if self.remove_in_2_seconds:
             self.remove_counter += 1
 
-        if self.remove_counter > 30:
+        if self.remove_counter > 36:
+            if self.remove_counter == 37:
+                self.game_view.sound_manager.play_sound(5)
             self.do_ice_animation()
 
         self.center_y += self.change_y
@@ -133,26 +135,86 @@ def generate_platform_type(game_view: GameSceneView):
     random_num = 0
 
     # Change spawn chances
-    if -1 < game_view.score <= 100:
+    if -1 < game_view.score <= 1000:
         random_num = np.random.randint(0, 1000)
-        normal_platform_chance = 120
-        ice_platform_chance = 80
-        bounce_platform_chance = 30
-        small_platform_chance = 30
-        big_platform_chance = 30
-        spike_platform_chance = 30
-        left_platform = 100
-        right_platform = 100
-    elif 100 < game_view.score < 5000:
+        normal_platform_chance = 650
+        ice_platform_chance = 50
+        bounce_platform_chance = 50
+        small_platform_chance = 50
+        big_platform_chance = 50
+        spike_platform_chance = 50
+        left_platform = 50
+        right_platform = 50
+    elif 1000 < game_view.score < 1500:
         random_num = np.random.randint(0, 1000)
-        normal_platform_chance = 120
-        ice_platform_chance = 120
-        bounce_platform_chance = 120
-        small_platform_chance = 120
-        big_platform_chance = 120
-        spike_platform_chance = 120
-        left_platform = 120
-        right_platform = 120
+        normal_platform_chance = 50
+        ice_platform_chance = 50
+        bounce_platform_chance = 650
+        small_platform_chance = 50
+        big_platform_chance = 50
+        spike_platform_chance = 50
+        left_platform = 50
+        right_platform = 50
+    elif 1500 < game_view.score < 2000:
+        random_num = np.random.randint(0, 1000)
+        normal_platform_chance = 50
+        ice_platform_chance = 650
+        bounce_platform_chance = 50
+        small_platform_chance = 50
+        big_platform_chance = 50
+        spike_platform_chance = 50
+        left_platform = 50
+        right_platform = 50
+    elif 2000 < game_view.score < 3000:
+        random_num = np.random.randint(0, 1000)
+        normal_platform_chance = 125
+        ice_platform_chance = 125
+        bounce_platform_chance = 125
+        small_platform_chance = 125
+        big_platform_chance = 125
+        spike_platform_chance = 125
+        left_platform = 125
+        right_platform = 125
+    elif 3000 < game_view.score < 3500:
+        random_num = np.random.randint(0, 1000)
+        normal_platform_chance = 50
+        ice_platform_chance = 50
+        bounce_platform_chance = 50
+        small_platform_chance = 50
+        big_platform_chance = 50
+        spike_platform_chance = 50
+        left_platform = 325
+        right_platform = 325
+    elif 3500 < game_view.score < 4000:
+        random_num = np.random.randint(0, 1000)
+        normal_platform_chance = 50
+        ice_platform_chance = 50
+        bounce_platform_chance = 650
+        small_platform_chance = 50
+        big_platform_chance = 50
+        spike_platform_chance = 50
+        left_platform = 50
+        right_platform = 50
+    elif 4000 < game_view.score < 4500:
+        random_num = np.random.randint(0, 1000)
+        normal_platform_chance = 50
+        ice_platform_chance = 650
+        bounce_platform_chance = 50
+        small_platform_chance = 50
+        big_platform_chance = 50
+        spike_platform_chance = 50
+        left_platform = 50
+        right_platform = 50
+    else:
+        random_num = np.random.randint(0, 1000)
+        normal_platform_chance = 125
+        ice_platform_chance = 125
+        bounce_platform_chance = 125
+        small_platform_chance = 125
+        big_platform_chance = 125
+        spike_platform_chance = 125
+        left_platform = 125
+        right_platform = 125
 
     all_platform_chances = [normal_platform_chance,
                             normal_platform_chance + ice_platform_chance,

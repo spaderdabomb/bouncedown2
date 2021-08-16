@@ -42,7 +42,7 @@ class GameSceneView(arcade.View):
         self.score = 0
         self.platform_speed = 1.7 * RESOLUTION_SCALING
         self.starting_platform_speed = self.platform_speed
-        self.leftright_platform_acceleration = 0.55
+        self.leftright_platform_acceleration = 0.45
         self.player_is_small = False
         self.player_is_big = False
         self.player_has_horns = False
@@ -159,10 +159,10 @@ class GameSceneView(arcade.View):
         self.bottom_bar.center_y = 50*RESOLUTION_SCALING
         self.sidebar_left = arcade.Sprite(os.path.join(SPRITES_PATH, 'sidebar_left.png'), RESOLUTION_SCALING)
         self.sidebar_left.center_x = 105*RESOLUTION_SCALING
-        self.sidebar_left.center_y = SCREEN_HEIGHT / 2
+        self.sidebar_left.center_y = (1080 - 555)
         self.sidebar_right = arcade.Sprite(os.path.join(SPRITES_PATH, 'sidebar_right.png'), RESOLUTION_SCALING)
         self.sidebar_right.center_x = 1814*RESOLUTION_SCALING
-        self.sidebar_right.center_y = SCREEN_HEIGHT / 2
+        self.sidebar_right.center_y = (1080 - 555)
 
         self.score_container = arcade.Sprite(os.path.join(SPRITES_PATH, 'score_container.png'),
                                              0.8 * RESOLUTION_SCALING)
@@ -225,7 +225,7 @@ class GameSceneView(arcade.View):
 
         fps = self.fps.get_fps()
         output = f"FPS: {fps:3.0f}"
-        arcade.draw_text(output, 20, SCREEN_HEIGHT - 80, arcade.color.BLACK, 16)
+        # arcade.draw_text(output, 20, SCREEN_HEIGHT - 80, arcade.color.BLACK, 16)
         self.draw_time = timeit.default_timer() - draw_start_time
         self.fps.tick()
 
@@ -330,12 +330,8 @@ class GameSceneView(arcade.View):
                                 GameData.data['achievements_progress'][7] += 1
                                 GameData.data['achievements_progress'][8] += 1
                             temp_platform.remove_after_2_seconds()
-
-                        # Sounds
-                        if temp_platform.ready_to_play_sound:
-                            self.sound_manager.play_sound(5)
                     elif temp_platform.platform_type == 3:  # Bounce platforms
-                        self.player.change_y += self.player.jump_velocity + 0.3 * temp_platform.change_y / self.starting_platform_speed
+                        self.player.change_y += self.player.jump_velocity + 0.2 * temp_platform.change_y / self.starting_platform_speed
                         self.player_is_bouncing = True
                         temp_platform.do_bounce_animation()
                         self.bouncy_platforms_touched += 1
@@ -644,10 +640,10 @@ class GameSceneView(arcade.View):
             self.keyup_pressed = True
         elif key == arcade.key.DOWN:
             self.keydown_pressed = True
-        elif key == arcade.key.LEFT:
+        elif key == arcade.key.LEFT or key == arcade.key.A:
             self.player.change_x += -self.player.acceleration
             self.keyleft_pressed = True
-        elif key == arcade.key.RIGHT:
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player.change_x += self.player.acceleration
             self.keyright_pressed = True
         elif key == arcade.key.SPACE:
@@ -665,9 +661,9 @@ class GameSceneView(arcade.View):
             self.keyup_pressed = False
         elif key == arcade.key.DOWN:
             self.keydown_pressed = False
-        elif key == arcade.key.LEFT:
+        elif key == arcade.key.LEFT or key == arcade.key.A:
             self.keyleft_pressed = False
-        elif key == arcade.key.RIGHT:
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.keyright_pressed = False
         elif key == arcade.key.SPACE:
             self.keyspace_pressed = False
@@ -682,6 +678,7 @@ class GameSceneView(arcade.View):
             pass
         if self.keyright_pressed:
             pass
+
 
     def lose_stage(self):
         self.player_ghost.kill()

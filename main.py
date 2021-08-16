@@ -1,4 +1,5 @@
 import arcade
+import pyglet
 
 from game_data import GameData
 from globals import *
@@ -9,7 +10,9 @@ from sound_manager import SoundManager
 
 def main():
     GameData(SCREEN_TITLE)
-    GameData.clear_all_data_except_username()
+    GameData.complete_all_achievements()
+    # GameData.data['username'] = None
+    # GameData.clear_all_data_except_username()
     # GameData.clear_data()
     # GameData.save_data()
     # window = arcade.Window(int(SCREEN_WIDTH), int(SCREEN_HEIGHT), SCREEN_TITLE, resizable=True)
@@ -29,10 +32,17 @@ class MyAppWindow(arcade.Window):
         self.achievement_dropdown_icon_list = arcade.SpriteList()
         self.achievement_dropdown_text_list = []
 
+        # self.maximize()
+        self.set_fullscreen()
+
     def on_resize(self, width: float, height: float):
         # It appears this currently messes up on hover events for buttons
         self.ctx.viewport = 0, 0, *self.get_framebuffer_size()
         self.ctx.projection_2d = 0, 1920, 0, 1080
+
+        if not self.fullscreen:
+            current_window_scale = self.width / SCREEN_WIDTH
+            self.height = int(SCREEN_HEIGHT * current_window_scale)
 
     def on_draw(self):
         for holder in self.achievement_dropdown_list:
@@ -63,6 +73,13 @@ class MyAppWindow(arcade.Window):
                 self.achievement_dropdown_text_list[0].center_x = (self.achievement_dropdown_list[0].center_x +
                                                                    self.achievement_dropdown_list[0].width / 8)
                 self.achievement_dropdown_text_list[0].center_y = self.achievement_dropdown_list[0].center_y
+
+    def on_key_release(self, key, modifiers):
+        if key == arcade.key.ESCAPE:
+            if self.fullscreen:
+                self.set_fullscreen(fullscreen=False)
+                current_window_scale = SCREEN_SCALING
+                self.height = int(SCREEN_HEIGHT * current_window_scale)
 
 
 if __name__ == "__main__":

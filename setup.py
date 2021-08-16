@@ -15,8 +15,8 @@ base = None
 if sys.platform == "win32":
     base = "Win32GUI"
 
-setup(  name = "Monster Hunter",
-        version = "0.1",
-        description = "My GUI application!",
+setup(  name = "Bouncedown 2",
+        version = "0.9",
+        description = "Bouncedown in 2021",
         options = {"build_exe": build_exe_options},
         executables = [Executable("main.py", base=base)])

@@ -20,8 +20,8 @@ class SoundManager():
         self.music = None
         self.sound = None
 
-        self.music_volume = 0.5
-        self.sound_volume = 0.5
+        self.music_volume = float(GameData.data['music_on']) * 0.5
+        self.sound_volume = float(GameData.data['music_on']) * 0.6
 
         self.setup()
 
@@ -49,9 +49,9 @@ class SoundManager():
         self.sound = arcade.Sound(self.sound_list[index], streaming=True)
         self.sound.play(self.sound_volume)
 
-    def play_song(self, index):
+    def play_song(self, index, new_song=True):
         # Stop what is currently playing.
-        if self.music:
+        if self.music and new_song:
             self.music.stop(self.current_player)
 
         # Play selected song
@@ -62,4 +62,6 @@ class SoundManager():
     def update(self):
         position = self.music.get_stream_position(self.current_player)
         if position == 0.0:
-            self.play_song(0)
+            self.play_song(0, new_song=False)
+
+        self.current_player.volume = self.music_volume
