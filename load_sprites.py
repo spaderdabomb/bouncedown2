@@ -6,7 +6,7 @@ from arcade.gui.ui_style import UIStyle
 
 from globals import *
 from Utils.core import CounterClass
-from Utils.gui import TextLabel, Theme, TextButton
+from Utils.gui import TextLabel, Theme, TextButton, CheckBox
 
 
 class SpriteCache:
@@ -25,6 +25,11 @@ class SpriteCache:
     BEST_EACH_BUTTON = None
     ALL_SCORES_BUTTON = None
     SUBMIT_HIGHSCORE_BUTTON = None
+
+    MUSIC_VOLUME_CHECKBOX = None
+    SOUND_VOLUME_CHECKBOX = None
+    MUSIC_VOLUME_LABEL = None
+    SOUND_VOLUME_LABEL = None
 
     ACHIEVEMENT_NAME_LABELS_LIST = []
     ACHIEVEMENT_LABELS_LIST = []
@@ -152,6 +157,44 @@ class SpriteCache:
         SpriteCache.START_BUTTON.scale = RESOLUTION_SCALING
         SpriteCache.FILE_INDEX += 1
 
+        # Music and sound check boxes
+        x = SCREEN_WIDTH / 2 + 200
+        y = (1080-364)*RESOLUTION_SCALING
+        theme = Theme()
+        theme.set_font(40, arcade.color.BLACK)
+        normal = os.path.join(SPRITES_PATH, "checkmark_box_on.png")
+        clicked = os.path.join(SPRITES_PATH, "checkmark_box_off.png")
+        theme.add_button_textures(normal, None, clicked, None)
+        SpriteCache.MUSIC_VOLUME_CHECKBOX = CheckBox(x, y, ' ', 'music_volume_checkbox', theme)
+        SpriteCache.MUSIC_VOLUME_CHECKBOX.scale = RESOLUTION_SCALING
+        SpriteCache.FILE_INDEX += 1
+
+        # Music and sound check boxes
+        x = SCREEN_WIDTH / 2 + 200
+        y = (1080-460)*RESOLUTION_SCALING
+        theme = Theme()
+        theme.set_font(40, arcade.color.BLACK)
+        normal = os.path.join(SPRITES_PATH, "checkmark_box_on.png")
+        clicked = os.path.join(SPRITES_PATH, "checkmark_box_off.png")
+        theme.add_button_textures(normal, None, clicked, None)
+        SpriteCache.SOUND_VOLUME_CHECKBOX = CheckBox(x, y, ' ', 'sound_volume_checkbox', theme)
+        SpriteCache.SOUND_VOLUME_CHECKBOX.scale = RESOLUTION_SCALING
+        SpriteCache.FILE_INDEX += 1
+
+        x = SCREEN_WIDTH / 2 - 200
+        y = (1080-364)*RESOLUTION_SCALING
+        label = TextLabel('Music', x, y, arcade.color.WHITE, font_size=32,
+                          anchor_x='center', anchor_y='center', bold=True, align='center')
+        SpriteCache.MUSIC_VOLUME_LABEL = label
+        SpriteCache.FILE_INDEX += 1
+
+        x = SCREEN_WIDTH / 2 - 200
+        y = (1080-460)*RESOLUTION_SCALING
+        label = TextLabel('Sound', x, y, arcade.color.WHITE, font_size=32,
+                          anchor_x='center', anchor_y='center', bold=True, align='center')
+        SpriteCache.SOUND_VOLUME_LABEL = label
+        SpriteCache.FILE_INDEX += 1
+
         # Back button
         x = SCREEN_WIDTH/2
         y = (1080 - 820)*RESOLUTION_SCALING
@@ -233,7 +276,7 @@ class SpriteCache:
         hovered = os.path.join(SPRITES_PATH, 'button_back_hover.png')
         clicked = os.path.join(SPRITES_PATH, 'button_back_clicked.png')
         theme.add_button_textures(normal, hovered, clicked, None)
-        SpriteCache.BACK_SUBMIT_HIGHSCORES_BUTTON = TextButton(pos3_x, pos1_y, '', 'back_button_submit_highscores', theme)
+        SpriteCache.BACK_SUBMIT_HIGHSCORES_BUTTON = TextButton(x, y, '', 'back_button_submit_highscores', theme)
         SpriteCache.BACK_SUBMIT_HIGHSCORES_BUTTON.scale = RESOLUTION_SCALING
         SpriteCache.FILE_INDEX += 1
 
@@ -246,8 +289,8 @@ class SpriteCache:
         hovered = os.path.join(SPRITES_PATH, 'button_submit_score_hover.png')
         clicked = os.path.join(SPRITES_PATH, 'button_submit_score_clicked.png')
         theme.add_button_textures(normal, hovered, clicked, None)
-        SpriteCache.SUBMIT_HIGHSCORE_BUTTON = TextButton(pos3_x, pos1_y, '', 'submit_highscore_button', theme)
+        SpriteCache.SUBMIT_HIGHSCORE_BUTTON = TextButton(x, y, '', 'submit_highscore_button', theme)
         SpriteCache.SUBMIT_HIGHSCORE_BUTTON.scale = RESOLUTION_SCALING
         SpriteCache.FILE_INDEX += 1
 
-        SpriteCache.FILE_INDEX = 1000
+        SpriteCache.FILE_INDEX = 185

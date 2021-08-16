@@ -1,3 +1,4 @@
+import arcade
 import subprocess
 import ctypes
 import sys
@@ -43,4 +44,22 @@ class CounterClass():
     def increase_counter(self):
         self.counter += 1
         return self.counter
+
+def get_scaled_mouse_coordinates(x, y):
+    current_window = arcade.get_window()
+    ctx_projection_coords = current_window.ctx.projection_2d
+    projection_width = ctx_projection_coords[1] - ctx_projection_coords[0]
+    projection_height = ctx_projection_coords[3] - ctx_projection_coords[2]
+
+    window_size = current_window.get_size()
+    window_width = window_size[0]
+    window_height = window_size[1]
+
+    x_scale = projection_width / window_width
+    y_scale = projection_height / window_height
+
+    x = x * x_scale
+    y = y * y_scale
+
+    return x, y
 
