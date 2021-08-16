@@ -50,9 +50,9 @@
       <recent name="C:\Repositories\PythonGameMaking\bouncedown_2\Assets\Audio" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.setup">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="bouncedown_2" />
+      <module name="bouncedown2" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -119,8 +119,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.setup" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.setup" />
         <item itemvalue="Python.test" />
       </list>
     </recent_temporary>
@@ -142,6 +142,8 @@
       <workItem from="1626471449427" duration="44171000" />
       <workItem from="1626842982347" duration="132563000" />
       <workItem from="1627700842145" duration="65097000" />
+      <workItem from="1628396707123" duration="2142000" />
+      <workItem from="1628543697711" duration="20000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1626733675528</created>
@@ -168,7 +170,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
@@ -181,6 +183,10 @@
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
     <state x="2930" y="446" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1626474967194" />
+    <state x="415" y="87" key="#main" timestamp="1628396735263">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="415" y="87" key="#main/0.23.1440.877@0.23.1440.877" timestamp="1628396735263" />
     <state x="2825" y="261" key="CommitChangelistDialog2" timestamp="1628234500963">
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
@@ -197,22 +203,26 @@
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
     <state x="2979" y="405" key="Github.UntrackedFilesDialog/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1626471544533" />
-    <state width="2517" height="287" key="GridCell.Tab.0.bottom" timestamp="1628233669949">
-      <screen x="1920" y="0" width="2560" height="1400" />
+    <state width="1398" height="230" key="GridCell.Tab.0.bottom" timestamp="1628543679305">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="2517" height="287" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1628233669949" />
-    <state width="2517" height="287" key="GridCell.Tab.0.center" timestamp="1628233669949">
-      <screen x="1920" y="0" width="2560" height="1400" />
+    <state width="1398" height="230" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1628543679305" />
+    <state width="1398" height="230" key="GridCell.Tab.0.center" timestamp="1628543679304">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="2517" height="287" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1628233669949" />
-    <state width="2517" height="287" key="GridCell.Tab.0.left" timestamp="1628233669949">
-      <screen x="1920" y="0" width="2560" height="1400" />
+    <state width="1398" height="230" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1628543679304" />
+    <state width="1398" height="230" key="GridCell.Tab.0.left" timestamp="1628543679304">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="2517" height="287" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1628233669949" />
-    <state width="2517" height="287" key="GridCell.Tab.0.right" timestamp="1628233669949">
-      <screen x="1920" y="0" width="2560" height="1400" />
+    <state width="1398" height="230" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1628543679304" />
+    <state width="1398" height="230" key="GridCell.Tab.0.right" timestamp="1628543679304">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="2517" height="287" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1628233669949" />
+    <state width="1398" height="230" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1628543679304" />
     <state width="2517" height="492" key="GridCell.Tab.1.bottom" timestamp="1627886304249">
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
@@ -229,10 +239,11 @@
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
     <state width="2517" height="492" key="GridCell.Tab.1.right/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1627886304249" />
-    <state x="2701" y="344" key="SettingsEditor" timestamp="1627930469542">
-      <screen x="1920" y="0" width="2560" height="1400" />
+    <state x="393" y="64" key="SettingsEditor" timestamp="1628397933665">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="2701" y="344" key="SettingsEditor/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1627930469542" />
+    <state x="393" y="64" key="SettingsEditor/0.23.1440.877@0.23.1440.877" timestamp="1628397933665" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1627279657213">
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
@@ -249,14 +260,19 @@
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
     <state x="2907" y="435" width="1121" height="530" key="find.popup/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1628146046083" />
+    <state x="382" y="260" key="git4idea.merge.GitPullDialog" timestamp="1629076315401">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="382" y="260" key="git4idea.merge.GitPullDialog/0.23.1440.877@0.23.1440.877" timestamp="1629076315401" />
     <state x="2863" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1627855154588">
       <screen x="1920" y="0" width="2560" height="1400" />
     </state>
     <state x="2863" y="315" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.0.2560.1400/-3840.-244.2560.1400@1920.0.2560.1400" timestamp="1627855154588" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/bouncedown_2$test.coverage" NAME="test Coverage Results" MODIFIED="1627683228808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/bouncedown_2$main.coverage" NAME="main Coverage Results" MODIFIED="1628148409795" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bouncedown_2$test.coverage" NAME="test Coverage Results" MODIFIED="1627683228808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bouncedown2$main.coverage" NAME="main Coverage Results" MODIFIED="1628397867208" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/bouncedown_2$setup.coverage" NAME="setup Coverage Results" MODIFIED="1628233667506" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
