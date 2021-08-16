@@ -2,12 +2,18 @@ import os
 import sys
 import pickle
 import numpy as np
+import threading
 
 from Utils import py_gjapi
 
+HIGHSCORE_ENTRY_ADDED = True
 NUM_ACHIEVEMENTS = 24
 NUM_SCORES_DISPLAYED = 10
 NUM_SCORES_LOGGED = 100
+ACHIEVEMENT_SCORES = [2000, 4000, 6000, 50000, 500000, 2000000,
+                      10, 20, 30, 5, 10, 20,
+                      1000, 2000, 3000, 1000, 2000, 3000,
+                      1000, 2000, 3500, 500, 1000, 2000]
 
 class GameData():
     '''
@@ -21,8 +27,6 @@ class GameData():
         'my_scores': [],
         'alltime_scores': [],
         'achievements_complete': [False for j in range(NUM_ACHIEVEMENTS)],
-        'achievements_scores': [2000, 4000, 6000, 50000, 500000, 2000000, 10, 20, 30, 5, 10, 20, 1000, 2000, 3000,
-                                1000, 2000, 3000, 1000, 2000, 3500, 500, 1000, 2000],
         'achievements_progress': [0 for i in range(NUM_ACHIEVEMENTS)],
         'username': None,
         'fakekey': None,
@@ -146,6 +150,7 @@ class GameData():
     @staticmethod
     def add_highscore_entry(score):
         # Local highscores
+        HIGHSCORE_ENTRY_ADDED = False
         my_scores_dict = GameData.data["my_scores"]
         my_scores_arr, my_scores_usernames_arr = GameData.sort_highscores()
 
@@ -164,9 +169,15 @@ class GameData():
             GameData.data['my_scores'] = my_scores_dict
 
         # Online highscores
+        t = threading.Thread(target=GameData.add_online_highscore(score))
+        t.start()
+
+    @staticmethod
+    def add_online_highscore(score):
         gamejolt = py_gjapi.GameJoltTrophy(GameData.data['username'], 'token', '633226', '93e6356d3b7a552047844a2e250b7fb1')
         gamejolt.addScores(str(score), score, table_id=648014, guest=True, guestname=GameData.data["username"])
         gamejolt.addScores(str(score), score, table_id=648016, guest=True, guestname=GameData.data["username"])
+        HIGHSCORE_ENTRY_ADDED = True
 
     # Debugging
     @staticmethod

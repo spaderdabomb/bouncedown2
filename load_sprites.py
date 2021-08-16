@@ -91,7 +91,7 @@ class SpriteCache:
             x = SCREEN_WIDTH / 2
             y = (1080 - 745) * RESOLUTION_SCALING
             text = (ACHIEVEMENT_TEXT[i] + ' ({:n}'.format(GameData.data['achievements_progress'][i]) +
-                    '/' + '{:n}'.format(GameData.data['achievements_scores'][i]) + ')')
+                    '/' + '{:n}'.format(ACHIEVEMENT_SCORES[i]) + ')')
             label = TextLabel(text, x, y, arcade.color.WHITE, font_size=14,
                               anchor_x='center', anchor_y='center', bold=True, align='center')
             SpriteCache.ACHIEVEMENT_LABELS_LIST.append(label)
@@ -105,8 +105,6 @@ class SpriteCache:
                               anchor_x='center', anchor_y='center', bold=True, align='center')
             SpriteCache.ACHIEVEMENT_DROPDOWN_LABELS_LIST.append(label)
             SpriteCache.FILE_INDEX += 1
-
-        print(SpriteCache.FILE_INDEX)
 
     @staticmethod
     def _load_ui():

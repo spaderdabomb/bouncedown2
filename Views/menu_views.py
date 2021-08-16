@@ -393,7 +393,7 @@ class AllViewsCombined(arcade.View):
             x = SCREEN_WIDTH / 2
             y = (1080 - 745) * RESOLUTION_SCALING
             text = (ACHIEVEMENT_TEXT[i] + ' ({:n}'.format(GameData.data['achievements_progress'][i]) +
-                    '/' + '{:n}'.format(GameData.data['achievements_scores'][i]) + ')')
+                    '/' + '{:n}'.format(ACHIEVEMENT_SCORES[i]) + ')')
             label = TextLabel(text, x, y, arcade.color.WHITE, font_size=14,
                               anchor_x='center', anchor_y='center', bold=True, align='center')
             SpriteCache.ACHIEVEMENT_LABELS_LIST.append(label)
@@ -419,20 +419,13 @@ class AllViewsCombined(arcade.View):
 
         self.all_time_highscores_list = py_gjapi.GameJoltTrophy(GameData.data['username'], 'token', '633226',
                                                                 '93e6356d3b7a552047844a2e250b7fb1')
-
-        highscores = self.all_time_highscores_list.fetchScores(table_id=648014)
         self.best_each_highscores_list = []
         self.best_each_usernames_list = []
-        for entry in highscores['scores']:
-            self.best_each_highscores_list.append(int(entry['sort']))
-            self.best_each_usernames_list.append(entry['guest'])
-
-        highscores = self.all_time_highscores_list.fetchScores(table_id=648016)
         self.all_time_scores_list = []
         self.all_time_usernames_list = []
-        for entry in highscores['scores']:
-            self.all_time_scores_list.append(int(entry['sort']))
-            self.all_time_usernames_list.append(entry['guest'])
+
+        t = threading.Thread(target=self._fetch_online_highscores)
+        t.start()
 
         # Setup background
         arcade.set_background_color(arcade.color.WHITE)
@@ -459,6 +452,24 @@ class AllViewsCombined(arcade.View):
         self.button_list.append(self.my_scores_button)
         self.button_list.append(self.best_each_button)
         self.button_list.append(self.all_scores_button)
+
+    def _fetch_online_highscores(self):
+        while not HIGHSCORE_ENTRY_ADDED:
+            time.sleep(0.01)
+
+        highscores = self.all_time_highscores_list.fetchScores(table_id=648014)
+        self.best_each_highscores_list = []
+        self.best_each_usernames_list = []
+        for entry in highscores['scores']:
+            self.best_each_highscores_list.append(int(entry['sort']))
+            self.best_each_usernames_list.append(entry['guest'])
+
+        highscores = self.all_time_highscores_list.fetchScores(table_id=648016)
+        self.all_time_scores_list = []
+        self.all_time_usernames_list = []
+        for entry in highscores['scores']:
+            self.all_time_scores_list.append(int(entry['sort']))
+            self.all_time_usernames_list.append(entry['guest'])
 
     def on_draw(self):
         arcade.start_render()

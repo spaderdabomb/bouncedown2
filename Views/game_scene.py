@@ -577,7 +577,7 @@ class GameSceneView(arcade.View):
             # Check if achievement complete
             for i in range(NUM_ACHIEVEMENTS):
                 if (
-                        GameData.data['achievements_progress'][i] >= GameData.data['achievements_scores'][i] and not
+                        GameData.data['achievements_progress'][i] >= ACHIEVEMENT_SCORES[i] and not
                         GameData.data['achievements_complete'][i]
                 ):
                     GameData.data['achievements_complete'][i] = True

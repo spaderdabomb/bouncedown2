@@ -4,6 +4,7 @@ import time
 
 from globals import *
 
+
 class SoundManager():
     """ Main application class. """
 
