@@ -15,6 +15,11 @@ def get_capslock_state():
         if subprocess.check_output('xset q | grep LED', shell=True)[65] == 51:
             capslock = True
 
+        if subprocess.check_output('xset q | grep LED', shell=True)[65] == 50:
+            capslock = False
+        if subprocess.check_output('xset q | grep LED', shell=True)[65] == 51:
+            capslock = True
+
     return capslock
 
 

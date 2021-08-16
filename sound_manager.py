@@ -30,7 +30,7 @@ class SoundManager():
         self.music_list = [os.path.join(AUDIO_PATH, "main_menu_music.wav"),
                            os.path.join(AUDIO_PATH, "in_game_music.wav")]
 
-        self.sound_list = [os.path.join(AUDIO_PATH, "menu_selection_click.wav"),
+        self.sound_list = [os.path.join(AUDIO_PATH, "menu_selection_click.mp3"),
                            os.path.join(AUDIO_PATH, "big_platform_sound.wav"),
                            os.path.join(AUDIO_PATH, "bounce_platform_sound.wav"),
                            os.path.join(AUDIO_PATH, "bounce_while_big_sound.wav"),

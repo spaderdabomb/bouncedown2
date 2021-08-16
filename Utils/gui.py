@@ -644,7 +644,10 @@ class TextLineEdit:
             if key_str.isalpha():
                 key_str = key_str.upper()
             else:
-                key_str = SHIFT_SYMBOL_DICT[key_str]
+                if sys.platform == "win32":
+                    key_str = SHIFT_SYMBOL_DICT[key_str]
+                elif sys.platform == "darwin":
+                    pass
 
         if key == arcade.key.BACKSPACE:
             if self._cursor_index < len(self.text_label.text):
@@ -683,7 +686,10 @@ class TextLineEdit:
                     self._shift_last_key_pressed = True
                 else:
                     self._shift_last_key_pressed = False
-            self._caps_lock_on = get_capslock_state()
+
+            self._caps_lock_on = False
+            if modifiers & arcade.key.MOD_CAPSLOCK:
+                self._caps_lock_on = True
 
             # Check keys pressed
             self._key_pressed_bool = True

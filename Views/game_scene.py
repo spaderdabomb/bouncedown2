@@ -239,27 +239,27 @@ class GameSceneView(arcade.View):
         if self.score < 1000:
             random_generator_num = np.random.randint(1, 40)
             min_num_frames_before_spawn = 40
-            max_num_frames_before_spawn = 160
+            max_num_frames_before_spawn = 150
         elif self.score < 2000:
             random_generator_num = np.random.randint(1, 25)
             min_num_frames_before_spawn = 25
-            max_num_frames_before_spawn = 100
-        elif self.score < 3000:
-            random_generator_num = np.random.randint(1, 20)
-            min_num_frames_before_spawn = 20
             max_num_frames_before_spawn = 90
-        elif self.score < 4000:
+        elif self.score < 3000:
             random_generator_num = np.random.randint(1, 15)
-            min_num_frames_before_spawn = 15
+            min_num_frames_before_spawn = 20
             max_num_frames_before_spawn = 80
-        elif self.score < 5000:
+        elif self.score < 4000:
             random_generator_num = np.random.randint(1, 10)
-            min_num_frames_before_spawn = 10
+            min_num_frames_before_spawn = 15
             max_num_frames_before_spawn = 70
-        else:
-            random_generator_num = np.random.randint(1, 10)
+        elif self.score < 5000:
+            random_generator_num = np.random.randint(1, 7)
             min_num_frames_before_spawn = 10
             max_num_frames_before_spawn = 60
+        else:
+            random_generator_num = np.random.randint(1, 7)
+            min_num_frames_before_spawn = 10
+            max_num_frames_before_spawn = 50
 
         return random_generator_num, min_num_frames_before_spawn, max_num_frames_before_spawn
 
@@ -419,7 +419,7 @@ class GameSceneView(arcade.View):
                     platform.ready_to_play_sound = True
 
         # Routines for small, big and spiky splat
-        if self.player_is_small:
+        if self.player_is_small and not self.game_ended:
             self.score_while_small += 1
             if self.score_while_small > GameData.data['achievements_progress'][12]:
                 GameData.data['achievements_progress'][12] += 1
@@ -447,7 +447,7 @@ class GameSceneView(arcade.View):
                     self.player.jump_velocity = self.player.jump_velocity_initial
                     self.player_is_small = False
                     self.player_is_small_countdown = self.small_big_countdown_start
-        elif self.player_is_big:
+        elif self.player_is_big and not self.game_ended:
             self.score_while_big += 1
             if self.score_while_big > GameData.data['achievements_progress'][15]:
                 GameData.data['achievements_progress'][15] += 1
@@ -475,7 +475,7 @@ class GameSceneView(arcade.View):
                     self.player.jump_velocity = self.player.jump_velocity_initial
                     self.player_is_big = False
                     self.player_is_big_countdown = self.small_big_countdown_start
-        if self.player_has_horns:
+        if self.player_has_horns and not self.game_ended:
             self.score_while_spiky += 1
             if self.score_while_spiky > GameData.data['achievements_progress'][18]:
                 GameData.data['achievements_progress'][18] += 1
@@ -487,26 +487,27 @@ class GameSceneView(arcade.View):
                 self.player_has_spikes_countdown = self.spike_countdown_start
 
         # Speed changes
-        if self.score % 100 == 0:
+        if self.score % 100 == 0 and not self.game_ended:
             for platform in self.platform_spritelist:
                 platform.change_y += 0.15 * RESOLUTION_SCALING
             self.platform_speed += 0.15 * RESOLUTION_SCALING
 
         # Player acceleration logic
-        if self.keyleft_pressed:
-            self.player.change_x += -self.player.acceleration
-            if np.abs(self.player.change_x) > self.player.max_speed_x:
-                self.player.change_x = -self.player.max_speed_x
-        elif self.keyright_pressed:
-            self.player.change_x += self.player.acceleration
-            if np.abs(self.player.change_x) > self.player.max_speed_x:
-                self.player.change_x = self.player.max_speed_x
-        else:
-            deceleration = self.player.change_x / 10
-            self.player.change_x -= deceleration
+        if not self.game_ended:
+            if self.keyleft_pressed:
+                self.player.change_x += -self.player.acceleration
+                if np.abs(self.player.change_x) > self.player.max_speed_x:
+                    self.player.change_x = -self.player.max_speed_x
+            elif self.keyright_pressed:
+                self.player.change_x += self.player.acceleration
+                if np.abs(self.player.change_x) > self.player.max_speed_x:
+                    self.player.change_x = self.player.max_speed_x
+            else:
+                deceleration = self.player.change_x / 10
+                self.player.change_x -= deceleration
 
-        if self.player.change_y > 0 and not self.player_is_bouncing:
-            self.player.change_y = 0
+            if self.player.change_y > 0 and not self.player_is_bouncing:
+                self.player.change_y = 0
 
         # Spikes and lava
         if self.spikes.center_y < SCREEN_HEIGHT + 45*RESOLUTION_SCALING:
