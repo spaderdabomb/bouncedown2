@@ -1,4 +1,5 @@
 import os
+import sys
 import pickle
 import numpy as np
 
@@ -20,7 +21,7 @@ class GameData():
         'my_scores': [],
         'alltime_scores': [],
         'achievements_complete': [False for j in range(NUM_ACHIEVEMENTS)],
-        'achievements_scores': [2000, 4000, 6000, 100000, 1000000, 5000000, 10, 20, 30, 5, 10, 20, 1000, 2000, 3000,
+        'achievements_scores': [2000, 4000, 6000, 50000, 500000, 2000000, 10, 20, 30, 5, 10, 20, 1000, 2000, 3000,
                                 1000, 2000, 3000, 1000, 2000, 3500, 500, 1000, 2000],
         'achievements_progress': [0 for i in range(NUM_ACHIEVEMENTS)],
         'username': None,
@@ -37,10 +38,14 @@ class GameData():
         '''
         # Create local data folder and files for game
         home = os.path.expanduser('~')
-        local_data_path = 'AppData\\Local\\' + game_name
+        local_data_path = None
+        if sys.platform == 'win32':
+            local_data_path = 'AppData\\Local\\' + game_name
+        elif sys.platform == 'darwin':
+            local_data_path = 'Library/Application Support/' + game_name
         data_file_name = 'GameData.pickle'
         game_data_path = os.path.join(home, local_data_path)
-        file_path = os.path.join(game_data_path, data_file_name)
+        file_path = os.path.normpath(os.path.join(game_data_path, data_file_name))
 
         # Create local folder
         GameData.DATA_FILE_PATH = file_path
@@ -90,7 +95,6 @@ class GameData():
             with open(GameData.DATA_FILE_PATH, 'rb') as f:
                 data = pickle.load(f)
                 GameData.data = data
-                print(GameData.data)
         except:
             pass
 

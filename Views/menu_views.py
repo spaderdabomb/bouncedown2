@@ -152,6 +152,7 @@ class SubmitHighscoresView(arcade.View):
         GameData.add_highscore_entry(self.final_score)
         GameData.save_data()
         start_menu_view = AllViewsCombined(self.window, self.sound_manager)
+        start_menu_view._setup_highscores_menu()
         self.window.show_view(start_menu_view)
 
     def on_mouse_release(self, x: float, y: float, button: int, modifiers: int):
