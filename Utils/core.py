@@ -3,17 +3,18 @@ import subprocess
 import ctypes
 import sys
 
-def get_capslock_state():
+def get_capslock_state(modifiers):
     capslock = None
     if sys.platform == "win32":
-        hllDll = ctypes.WinDLL ("User32.dll")
-        VK_CAPITAL = 0x14
-        capslock = hllDll.GetKeyState(VK_CAPITAL)
-    elif sys.platform == "darwin":
-        if subprocess.check_output('xset q | grep LED', shell=True)[65] == 50:
-            capslock = False
-        if subprocess.check_output('xset q | grep LED', shell=True)[65] == 51:
+        if modifiers == 24:
             capslock = True
+        else:
+            capslock = False
+    elif sys.platform == "darwin":
+        if modifiers == 8:
+            capslock = True
+        else:
+            capslock = False
 
     return capslock
 

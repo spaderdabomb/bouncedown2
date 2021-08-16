@@ -683,7 +683,10 @@ class TextLineEdit:
                     self._shift_last_key_pressed = True
                 else:
                     self._shift_last_key_pressed = False
-            self._caps_lock_on = get_capslock_state()
+
+            self._caps_lock_on = False
+            if modifiers & arcade.key.MOD_CAPSLOCK:
+                self._caps_lock_on = True
 
             # Check keys pressed
             self._key_pressed_bool = True

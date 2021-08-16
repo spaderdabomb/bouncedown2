@@ -10,7 +10,7 @@ from sound_manager import SoundManager
 
 def main():
     GameData(SCREEN_TITLE)
-    GameData.complete_all_achievements()
+    # GameData.complete_all_achievements()
     # GameData.data['username'] = None
     # GameData.clear_all_data_except_username()
     # GameData.clear_data()
@@ -33,7 +33,7 @@ class MyAppWindow(arcade.Window):
         self.achievement_dropdown_text_list = []
 
         # self.maximize()
-        self.set_fullscreen()
+        # self.set_fullscreen()
 
     def on_resize(self, width: float, height: float):
         # It appears this currently messes up on hover events for buttons
