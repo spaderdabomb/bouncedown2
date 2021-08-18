@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e8f09796-80ed-46cb-99ef-6649173ff901" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/game_scene.py" beforeDir="false" afterPath="$PROJECT_DIR$/Views/game_scene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/menu_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Views/menu_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/globals.py" beforeDir="false" afterPath="$PROJECT_DIR$/globals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_sprites.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_sprites.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sound_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/sound_manager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,6 +156,7 @@
       <workItem from="1629090165022" duration="890000" />
       <workItem from="1629138785931" duration="1032000" />
       <workItem from="1629139827555" duration="3048000" />
+      <workItem from="1629184456370" duration="1060000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1626733675528</created>
