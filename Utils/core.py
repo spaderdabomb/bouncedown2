@@ -1,6 +1,5 @@
 import arcade
 import subprocess
-import ctypes
 import sys
 
 def get_capslock_state(modifiers):

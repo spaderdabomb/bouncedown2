@@ -1,10 +1,6 @@
 from __future__ import annotations
 
 import arcade
-import arcade.gui
-from arcade.gui.ui_style import UIStyle
-import threading
-import locale
 import time
 
 import py_gjapi
@@ -57,7 +53,7 @@ class LoadingMenuView(arcade.View):
         if SpriteCache.FILE_INDEX == 0:
             width = 0
         else:
-            width = self.loading_screen_container.width * SpriteCache.FILE_INDEX / 158 - 24 * RESOLUTION_SCALING
+            width = self.loading_screen_container.width * SpriteCache.FILE_INDEX / 185 - 24 * RESOLUTION_SCALING
         height = self.loading_screen_container.height - 18*RESOLUTION_SCALING
         x = self.loading_screen_container.center_x - self.loading_screen_container.width/2 + width/2 + 6*RESOLUTION_SCALING
         y = self.loading_screen_container.center_y
@@ -133,7 +129,7 @@ class SubmitHighscoresView(arcade.View):
     def on_key_release(self, key: int, modifiers: int):
         super().on_key_release(key, modifiers)
         self.dialogue_box.on_key_release(key, modifiers)
-        if key == arcade.key.ENTER:
+        if key == arcade.key.ENTER or key == arcade.key.SPACE:
             self.submit_highscore_pressed()
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
@@ -143,17 +139,33 @@ class SubmitHighscoresView(arcade.View):
             button.on_mouse_press(x, y)
 
         self.dialogue_box.on_mouse_press(x, y, button, modifiers)
-        if not self.dialogue_box.text_label.text == '':
+        if (
+                not self.dialogue_box.text_label.text == '' and
+                self.dialogue_box.text_label.text is not None
+        ):
             GameData.data['username'] = self.dialogue_box.text_label.text
+            GameData.save_data()
+        else:
+            GameData.data['username'] = None
             GameData.save_data()
 
     def submit_highscore_pressed(self):
-        self.sound_manager.play_sound(0)
-        GameData.add_highscore_entry(self.final_score)
-        GameData.save_data()
-        start_menu_view = AllViewsCombined(self.window, self.sound_manager)
-        start_menu_view._setup_highscores_menu()
-        self.window.show_view(start_menu_view)
+        if (
+                not self.dialogue_box.text_label.text == '' and
+                self.dialogue_box.text_label.text is not None
+        ):
+            GameData.data['username'] = self.dialogue_box.text_label.text
+            GameData.save_data()
+            self.sound_manager.play_sound(0)
+            GameData.add_highscore_entry(self.final_score)
+            GameData.save_data()
+            start_menu_view = AllViewsCombined(self.window, self.sound_manager)
+            start_menu_view._setup_highscores_menu()
+            self.window.show_view(start_menu_view)
+        else:
+            self.dialogue_box.placeholder_text.color = (255, 80, 80, 120)
+            GameData.data['username'] = None
+            GameData.save_data()
 
     def on_mouse_release(self, x: float, y: float, button: int, modifiers: int):
         button_released = None
@@ -177,7 +189,6 @@ class AllViewsCombined(arcade.View):
         self.window = window
         self.sound_manager = sound_manager
         self.sound_manager.play_song(0)
-        self.ui_manager = arcade.gui.UIManager(window)
 
         self.current_view = 'main_menu'
         self.setup_bool = False
@@ -649,10 +660,14 @@ class AllViewsCombined(arcade.View):
         if self.current_view == 'settings':
             self.dialogue_box.on_key_release(key, modifiers)
         elif self.current_view == 'main_menu':
-            if key == arcade.key.ENTER:
+            if key == arcade.key.ENTER or key == arcade.key.SPACE:
                 self.sound_manager.play_sound(0)
                 game_scene_view = game_scene.GameSceneView(self.window, self.sound_manager)
                 self.window.show_view(game_scene_view)
+        elif self.current_view == 'highscores':
+            if key == arcade.key.ENTER or key == arcade.key.SPACE:
+                self.sound_manager.play_sound(0)
+                self._setup_start_menu()
 
     def on_mouse_motion(self, x: float, y: float, dx: float, dy: float):
         for button in self.button_list:
@@ -666,8 +681,14 @@ class AllViewsCombined(arcade.View):
             button.on_mouse_press(x, y)
         if self.current_view == 'settings':
             self.dialogue_box.on_mouse_press(x, y, button, modifiers)
-            if not self.dialogue_box.text_label.text == '':
+            if (
+                    not self.dialogue_box.text_label.text == '' and
+                    self.dialogue_box.text_label.text is not None
+            ):
                 GameData.data['username'] = self.dialogue_box.text_label.text
+                GameData.save_data()
+            else:
+                GameData.data['username'] = None
                 GameData.save_data()
 
     def on_mouse_release(self, x: float, y: float, button: int, modifiers: int):

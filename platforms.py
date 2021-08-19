@@ -1,10 +1,7 @@
 from __future__ import annotations
 
 import arcade
-import numpy as  np
-
 from globals import *
-from load_sprites import SpriteCache
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -69,8 +66,8 @@ class Platform(arcade.Sprite):
         if self.remove_in_2_seconds:
             self.remove_counter += 1
 
-        if self.remove_counter > 36:
-            if self.remove_counter == 37:
+        if self.remove_counter > 30:
+            if self.remove_counter == 31:
                 self.game_view.sound_manager.play_sound(5)
             self.do_ice_animation()
 

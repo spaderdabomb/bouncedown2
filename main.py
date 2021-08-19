@@ -1,26 +1,29 @@
 import arcade
-import pyglet
 
-from game_data import GameData
+from game_data import GameData, log_runtime_error
 from globals import *
 from Views import menu_views
-from load_sprites import SpriteCache
 from sound_manager import SoundManager
-
+import traceback
 
 def main():
-    GameData(SCREEN_TITLE)
-    # GameData.complete_all_achievements()
-    # GameData.data['username'] = None
-    # GameData.clear_all_data_except_username()
-    # GameData.clear_data()
-    # GameData.save_data()
-    # window = arcade.Window(int(SCREEN_WIDTH), int(SCREEN_HEIGHT), SCREEN_TITLE, resizable=True)
-    window = MyAppWindow()
-    sound_manager = SoundManager(window)
-    loading_view = menu_views.LoadingMenuView(window, sound_manager)
-    window.show_view(loading_view)
-    arcade.run()
+    try:
+        GameData(SCREEN_TITLE)
+        # GameData.complete_all_achievements()
+        # GameData.data['username'] = None
+        # GameData.clear_all_data_except_username()
+        # GameData.clear_data()
+        # GameData.save_data()
+        # window = arcade.Window(int(SCREEN_WIDTH), int(SCREEN_HEIGHT), SCREEN_TITLE, resizable=True)
+        window = MyAppWindow()
+        sound_manager = SoundManager(window)
+        loading_view = menu_views.LoadingMenuView(window, sound_manager)
+        window.show_view(loading_view)
+        arcade.run()
+    except Exception as err:
+        stack_trace = 'Error: ' + str(err) + '\n\n' + traceback.format_exc()
+        log_runtime_error(SCREEN_TITLE, stack_trace)
+
 
 class MyAppWindow(arcade.Window):
     """ Main application class. """
@@ -31,6 +34,10 @@ class MyAppWindow(arcade.Window):
         self.achievement_dropdown_list = arcade.SpriteList()
         self.achievement_dropdown_icon_list = arcade.SpriteList()
         self.achievement_dropdown_text_list = []
+
+        # self.tracker = SummaryTracker()
+
+        self.frame_counter = 0
 
         # self.maximize()
         # self.set_fullscreen()
@@ -53,6 +60,10 @@ class MyAppWindow(arcade.Window):
             text_label.draw()
 
     def on_update(self, dt):
+        # if self.frame_counter % 1800 == 0:
+        #     print('tracking...')
+        #     self.tracker.print_diff()
+
         # Update achievements
         if len(self.achievement_dropdown_list) >= 1:
             if self.achievement_dropdown_list[0].finished:
@@ -73,6 +84,8 @@ class MyAppWindow(arcade.Window):
                 self.achievement_dropdown_text_list[0].center_x = (self.achievement_dropdown_list[0].center_x +
                                                                    self.achievement_dropdown_list[0].width / 8)
                 self.achievement_dropdown_text_list[0].center_y = self.achievement_dropdown_list[0].center_y
+
+        self.frame_counter += 1
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.ESCAPE:

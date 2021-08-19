@@ -206,3 +206,22 @@ class GameData():
 
         GameData.data['achievements_complete'] = achievements_dict
         GameData.save_data()
+
+
+def log_runtime_error(game_name, error):
+    # Create local data folder and files for game
+    home = os.path.expanduser('~')
+    local_data_path = None
+    if sys.platform == 'win32':
+        local_data_path = 'AppData\\Local\\' + game_name
+    elif sys.platform == 'darwin':
+        local_data_path = 'Library/Application Support/' + game_name
+    data_file_name = 'ErrorLog.txt'
+    game_data_path = os.path.join(home, local_data_path)
+    file_path = os.path.normpath(os.path.join(game_data_path, data_file_name))
+
+    try:
+        with open(file_path, 'w') as f:
+            f.write(error)
+    except:
+        pass

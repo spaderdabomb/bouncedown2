@@ -3,12 +3,8 @@ from __future__ import annotations
 import arcade
 import arcade.gui
 import collections
-import os
 import time
-import numpy as np
 import timeit
-
-from arcade.gui.ui_style import UIStyle
 
 from globals import *
 from player import Player
@@ -16,7 +12,6 @@ from platforms import Platform, generate_platform_type
 from load_sprites import SpriteCache
 from game_data import GameData
 from Views import menu_views
-from Utils.gui import TextLabel
 
 from typing import TYPE_CHECKING
 
@@ -76,6 +71,8 @@ class GameSceneView(arcade.View):
         self.frames_since_platform_created = 0
         self.game_ended = False
         self.setup_complete = False
+
+        self.debug_time = time.time()
 
         self._setup()
 
@@ -270,6 +267,8 @@ class GameSceneView(arcade.View):
         self.fire.append_texture(self.fire_texture_2)
 
     def on_update(self, dt):
+        a = time.time()
+
         # Load textures after setup
         if not self.setup_complete:
             self._load_textures()
@@ -613,6 +612,10 @@ class GameSceneView(arcade.View):
                     start_menu_view = menu_views.AllViewsCombined(self.window, self.sound_manager)
                     self.window.show_view(start_menu_view)
                     start_menu_view._setup_highscores_menu()
+
+        self.debug_time += time.time() - a
+        if self.frames_elapsed % 600 == 0:
+            self.debug_time = 0
 
 
     def update_animation(self):
